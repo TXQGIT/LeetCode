@@ -11,7 +11,6 @@ def merge(intervals):
     #         return True
     #     else:
     #         return False
-    #
     # ans = []
     # for cur in intervals:
     #     idx = 0
