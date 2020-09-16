@@ -34,8 +34,8 @@ class Solution:
         return dp[-1][-1]
 
 solution = Solution()
+# s = "mississippi"
+# p = "mis*is*p*."
 s = 'aa'
 p = 'a*'
-# s = ''
-# p = '.*'
 print(solution.isMatch(s, p))

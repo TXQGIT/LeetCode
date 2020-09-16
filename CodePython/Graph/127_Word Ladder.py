@@ -3,26 +3,6 @@ class Solution:
         # 构建无向图，然后找起点到终点的最短路径（BFS搜索即可）
         from collections import defaultdict
 
-        def is_connected(w1, w2):
-            n1, n2 = len(w1), len(w2)
-            if n1 != n2:
-                return False
-            count = 0
-            for i in range(n1):
-                if w1[i] != w2[i]:
-                    count += 1
-            return count == 1
-
-        def build_graph_native(wordList):
-            graph = defaultdict(list)
-            n = len(wordList)
-            for i in range(n):
-                for j in range(i + 1, n):
-                    if is_connected(wordList[i], wordList[j]):
-                        graph[wordList[i]].append(wordList[j])
-                        graph[wordList[j]].append(wordList[i])
-            return graph
-
         def build_graph_effective(wordList):
             graph = defaultdict(list)
             for w in wordList:
@@ -34,6 +14,7 @@ class Solution:
                     graph[w_str].append(w)
             return graph
 
+        # 单向BFS
         def bfs(graph, begin, end):
             queue = [(begin, 0)]
             visited = set()
@@ -45,22 +26,6 @@ class Solution:
                         queue.append((v, cur_change + 1))
                         visited.add(v)
                     if v == end:
-                        #return cur_change + 1
-                        return (cur_change + 1)//2
-            return 0
-
-        def bfs_(graph, begin, end):
-            queue = [(begin, 0)]
-            visited = set()
-            visited.add(begin)
-            while queue:
-                cur_node, cur_change = queue.pop(0)
-                for v in graph[cur_node]:
-                    if v not in visited:
-                        queue.append((v, cur_change + 1))
-                        visited.add(v)
-                    if v == end:
-                        #return cur_change + 1
                         return (cur_change + 1)//2
             return 0
 
@@ -74,6 +39,7 @@ class Solution:
                     visited[v] = cur_change+1
             return 0
 
+        #双向BFS, 降低空间复杂度
         def bidirect_bfs(graph, begin, end):
             queue_begin = [(begin, 0)]
             queue_end = [(end, 0)]
@@ -96,12 +62,6 @@ class Solution:
         wordList = list(set(wordList))
         print('Running Time of unique WordList: ', time.time()-begin)
         begin = time.time()
-        # graph = build_graph_native(wordList)
-        # print('Running Time of build graph native: ', time.time() - begin)
-        # begin = time.time()
-        # ans = bfs(graph, beginWord, endWord) + 1
-        # print('Running Time of : ', time.time() - begin)
-        # begin = time.time()
         graph = build_graph_effective(wordList)
         print('Running Time: ', time.time() - begin)
         begin = time.time()
