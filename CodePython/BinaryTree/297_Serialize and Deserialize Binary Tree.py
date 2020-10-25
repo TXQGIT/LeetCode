@@ -22,19 +22,23 @@ class Codec:
         #         string = rserialize(root.left, string)
         #         string = rserialize(root.right, string)
         #     return string
+        # string = ''
+        # return rserialize(root, string)
 
-        # 方法2：中序遍历
-        def rserialize(root, string):
-            if root is None:
-                string += 'None,'
-            else:
-                string = rserialize(root.left, string)
-                string += str(root.val) + ','
-                string = rserialize(root.right, string)
-            return string
+        # 先序遍历, 并且在遍历序列中保留每个叶子节点的None值
+        res = []
+        queue = []
+        while root or queue:
+            while root:
+                res.append(str(root.val))
+                queue.append(root)
+                root = root.left
+            res.append('None')
+            root = queue.pop()
+            root = root.right
+        ans = ','.join(res)
+        return ans
 
-        string = ''
-        return rserialize(root, string)
 
     def deserialize(self, data):
         """Decodes your encoded data to tree.
@@ -43,7 +47,7 @@ class Codec:
         :rtype: TreeNode
         """
 
-        # 方法1：从先序遍历中恢复
+        #方法1：从先序遍历中恢复
         # def rdeserialize(data):
         #     if data[0]=='None':
         #         data.pop(0)
@@ -54,24 +58,20 @@ class Codec:
         #     root.right = rdeserialize(data)
         #     return root
 
-        # 方法2：从中序遍历中恢复
         def rdeserialize(data):
-            if data[0] == 'None':
-                data.pop(0)
+            if len(data)==0:
                 return None
-            left = TreeNode(data[0])
-            data.pop(0)
-
-            left = rdeserialize(data)
-            root = TreeNode(data[0])
-            data.pop(0)
-            right = rdeserialize(data)
-            root.left = left
-            root.right = right
+            val = data.pop(0)
+            if val == 'None':
+                return None
+            root = TreeNode(int(val))
+            root.left = rdeserialize(data)
+            root.right = rdeserialize(data)
             return root
 
+        if len(data)==0:
+            return None
         data = data.split(',')
-        data.pop(0)
         root = rdeserialize(data)
         return root
 
@@ -82,4 +82,4 @@ root.right = TreeNode(3)
 root.right.left = TreeNode(4)
 root.right.right = TreeNode(5)
 codec = Codec()
-codec.deserialize(codec.serialize(root))
+ans = codec.deserialize(codec.serialize(None))
